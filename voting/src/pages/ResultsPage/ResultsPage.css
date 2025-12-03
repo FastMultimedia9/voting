@@ -1,0 +1,264 @@
+.results-page {
+  padding: 1rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--gray-color);
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.total-votes {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.total-label {
+  color: var(--gray-color);
+  font-weight: 500;
+}
+
+.total-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.results-overview {
+  margin-bottom: 3rem;
+}
+
+.overview-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.overview-card h3 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--dark-color);
+}
+
+.leaders {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.leader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+}
+
+.position {
+  font-weight: 500;
+  color: var(--dark-color);
+}
+
+.leader-name {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.leader-votes {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.results-by-position {
+  display: grid;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.position-results {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.position-results h2 {
+  margin-bottom: 1.5rem;
+  color: var(--dark-color);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.results-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
+
+.result-item:hover {
+  background-color: #f8fafc;
+}
+
+.result-rank {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.rank-number {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.candidate-info h4 {
+  margin: 0;
+  color: var(--dark-color);
+}
+
+.candidate-party {
+  font-size: 0.9rem;
+  color: var(--gray-color);
+}
+
+.result-stats {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vote-bar-container {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.vote-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+.vote-numbers {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vote-count {
+  font-weight: bold;
+  color: var(--dark-color);
+}
+
+.vote-percentage {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.results-summary {
+  margin: 3rem 0;
+}
+
+.results-summary h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--dark-color);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.summary-card h4 {
+  margin-bottom: 0.5rem;
+  color: var(--gray-color);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0.5rem 0;
+}
+
+.summary-card p {
+  color: var(--gray-color);
+  font-size: 0.9rem;
+}
+
+.results-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .result-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .results-actions {
+    flex-direction: column;
+  }
+  
+  .results-actions .btn {
+    width: 100%;
+  }
+}
