@@ -1,23 +1,24 @@
-// src/pages/HomePage/HomePage.jsx - FIXED
+// src/pages/HomePage.js (rename to HomePage.jsx)
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './HomePage.css';
+import './HomePage.css'; // If you have CSS
 
 const HomePage = () => {
   return (
     <div className="home-page">
-      <div className="hero">
-        <h1>Welcome to Secure Voting System</h1>
-        <p className="subtitle">A transparent, secure, and modern voting platform</p>
-        <div className="cta-buttons">
-          <Link to="/vote" className="btn btn-primary">Start Voting</Link>
-          <Link to="/results" className="btn btn-secondary">View Results</Link>
-        </div>
+      <h1>Welcome to Voting System</h1>
+      <p>This is the home page where users can view active elections and their status.</p>
+      <div style={{ marginTop: '20px' }}>
+        <h3>Features:</h3>
+        <ul style={{ marginLeft: '20px', marginTop: '10px' }}>
+          <li>View active elections</li>
+          <li>Register to vote</li>
+          <li>Access voting interface</li>
+          <li>View election results</li>
+          <li>Manage your profile</li>
+        </ul>
       </div>
-
-      {/* ... rest of your HomePage component ... */}
     </div>
   );
 };
 
-export default HomePage;
+export default HomePage; // Changed from module.exports

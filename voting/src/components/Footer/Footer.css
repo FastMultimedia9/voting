@@ -1,15 +1,13 @@
+/* src/components/Footer.css */
 .footer {
-  background-color: var(--dark-color);
+  background-color: #2c3e50;
   color: white;
-  padding: 2rem 0;
+  text-align: center;
+  padding: 2rem;
   margin-top: auto;
 }
 
-.footer-content {
-  text-align: center;
-}
-
-.footer-content p {
+.footer p {
   margin: 0.5rem 0;
-  color: #cbd5e1;
+  color: #ecf0f1;
 }

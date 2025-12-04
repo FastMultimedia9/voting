@@ -1,2 +1,3 @@
-import AdminPage from './AdminPage';
-export default AdminPage;
+// src/pages/AdminPage/index.js
+const AdminPage = require('./AdminPage').default;
+module.exports = AdminPage;
