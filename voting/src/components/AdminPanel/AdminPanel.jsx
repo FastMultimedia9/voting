@@ -1,15 +1,6 @@
-// AdminPanel.jsx
+// AdminPanel.jsx - FULL FIXED CODE
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
-import {
-  // ... other imports
-  FaUserPlus, // Add this
-  FaPlus, // This should already be there
-  // ... rest of imports
-} from 'react-icons/fa';
-
-
-
 import AddUserModal from './AddUserModal';
 
 // Import icons
@@ -29,7 +20,8 @@ import {
   FaEye,
   FaDownload,
   FaUserTie,
- 
+  FaUserPlus,
+  FaPlus,
   FaTimes,
   FaCheck,
   FaUpload,
@@ -365,14 +357,14 @@ const AdminPanel = () => {
   const [voterFilter, setVoterFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // State for modals
+  // State for modals - ADD THE MISSING STATE HERE
   const [showAddElectionModal, setShowAddElectionModal] = useState(false);
   const [showAddCandidateModal, setShowAddCandidateModal] = useState(false);
   const [showEditElectionModal, setShowEditElectionModal] = useState(false);
   const [showEditCandidateModal, setShowEditCandidateModal] = useState(false);
   const [showViewReportModal, setShowViewReportModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  
+  const [showAddUserModal, setShowAddUserModal] = useState(false); // ADD THIS LINE
 
   // State for forms
   const [newElection, setNewElection] = useState({
@@ -405,33 +397,32 @@ const AdminPanel = () => {
   const [confirmAction, setConfirmAction] = useState({ type: '', data: null });
 
   // Load initial data on component mount
- // In AdminPanel.jsx, update the useEffect:
-useEffect(() => {
-  const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
-  const savedAdminInfo = localStorage.getItem('adminInfo') || localStorage.getItem('user');
-  
-  if (token && savedAdminInfo) {
-    try {
-      const adminInfo = JSON.parse(savedAdminInfo);
-      // Check if user is actually an admin
-      if (adminInfo.role !== 'admin') {
-        // Not an admin, redirect to login
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+    const savedAdminInfo = localStorage.getItem('adminInfo') || localStorage.getItem('user');
+    
+    if (token && savedAdminInfo) {
+      try {
+        const adminInfo = JSON.parse(savedAdminInfo);
+        // Check if user is actually an admin
+        if (adminInfo.role !== 'admin') {
+          // Not an admin, redirect to login
+          window.location.href = '/login';
+          return;
+        }
+        
+        setAuthToken(token);
+        setAdminInfo(adminInfo);
+        loadInitialData(token);
+      } catch (error) {
+        console.error('Error parsing admin info:', error);
         window.location.href = '/login';
-        return;
       }
-      
-      setAuthToken(token);
-      setAdminInfo(adminInfo);
-      loadInitialData(token);
-    } catch (error) {
-      console.error('Error parsing admin info:', error);
+    } else {
+      // Redirect to login if no token found
       window.location.href = '/login';
     }
-  } else {
-    // Redirect to login if no token found
-    window.location.href = '/login';
-  }
-}, []);
+  }, []);
 
   // Load data based on active tab
   useEffect(() => {
@@ -590,7 +581,7 @@ useEffect(() => {
       localStorage.removeItem('adminInfo');
       setAuthToken('');
       setAdminInfo(null);
-      window.location.href = '/admin/login'; // Redirect to login page
+      window.location.href = '/admin/login';
     }
   };
 
@@ -777,6 +768,12 @@ useEffect(() => {
     }
   };
 
+  // Handle user addition
+  const handleUserAdded = (newUser) => {
+    alert(`User ${newUser?.fullName || 'added'} successfully!`);
+    loadVotersData(); // Refresh voters list
+  };
+
   // Handle notification actions
   const handleMarkNotificationAsRead = async (notificationId) => {
     try {
@@ -888,8 +885,6 @@ useEffect(() => {
             <p>Loading statistics...</p>
           )}
         </div>
-        
-
         
         {/* Recent Activity & Elections */}
         <div className="content-row">
@@ -1133,188 +1128,192 @@ useEffect(() => {
   
   // Render the voters management content
   const renderVoters = () => {
-  if (loading.voters) return renderLoading();
+    if (loading.voters) return renderLoading();
 
-  const voterStats = {
-    verified: voters.filter(v => v.status === 'active' && v.is_verified).length,
-    pending: voters.filter(v => v.status === 'pending').length,
-    suspended: voters.filter(v => v.status === 'suspended').length,
-    total: voters.length
-  };
+    const voterStats = {
+      verified: voters.filter(v => v.status === 'active' && v.is_verified).length,
+      pending: voters.filter(v => v.status === 'pending').length,
+      suspended: voters.filter(v => v.status === 'suspended').length,
+      total: voters.length
+    };
 
-  return (
-    <div className="voters-content">
-      <div className="page-header">
-        <h1 className="page-title">Voter Management</h1>
-        {/* ADDED THE BUTTON HERE */}
-        <button 
-          className="primary-button"
-          onClick={() => setShowAddUserModal(true)}
-        >
-          <FaUserPlus /> Add New User
-        </button>
-      </div>
-      
-      <div className="stats-bar">
-        <div className="stat-item">
-          <span className="stat-number">{voterStats.verified}</span>
-          <span className="stat-label">Verified</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">{voterStats.pending}</span>
-          <span className="stat-label">Pending</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">{voterStats.suspended}</span>
-          <span className="stat-label">Suspended</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-number">{voterStats.total}</span>
-          <span className="stat-label">Total Voters</span>
-        </div>
-      </div>
-      
-      <div className="filters-bar">
-        <div className="search-box">
-          <FaSearch />
-          <input 
-            type="text" 
-            placeholder="Search voters by name, email, or username..." 
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-        <div className="filter-options">
-          <select 
-            className="dropdown-filter"
-            value={voterFilter}
-            onChange={(e) => {
-              setVoterFilter(e.target.value);
-              setTimeout(() => loadVotersData(), 300);
-            }}
+    return (
+      <div className="voters-content">
+        <div className="page-header">
+          <h1 className="page-title">Voter Management</h1>
+          <button 
+            className="primary-button"
+            onClick={() => setShowAddUserModal(true)}
           >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="pending">Pending</option>
-            <option value="suspended">Suspended</option>
-            <option value="inactive">Inactive</option>
-          </select>
+            <FaUserPlus /> Add New User
+          </button>
         </div>
-      </div>
-      
-      <div className="card">
-        <div className="card-content">
-          {voters.length > 0 ? (
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Voter ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Username</th>
-                  <th>Status</th>
-                  <th>Verified</th>
-                  <th>Registration Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {voters.map(voter => (
-                  <tr key={voter.user_id}>
-                    <td>#{voter.user_id.toString().padStart(4, '0')}</td>
-                    <td>{voter.full_name}</td>
-                    <td>{voter.email}</td>
-                    <td>{voter.username}</td>
-                    <td>
-                      <span className={`status-badge status-${voter.status}`}>
-                        {voter.status}
-                      </span>
-                    </td>
-                    <td>
-                      {voter.is_verified ? (
-                        <FaCheckCircle className="text-success" title="Verified" />
-                      ) : (
-                        <FaTimesCircle className="text-danger" title="Not Verified" />
-                      )}
-                    </td>
-                    <td>{new Date(voter.registration_date).toLocaleDateString()}</td>
-                    <td>
-                      <div className="table-actions">
-                        <button 
-                          className="icon-button" 
-                          title="View Details"
-                          onClick={() => {
-                            // View voter details
-                            alert(`Voter Details:\nName: ${voter.full_name}\nEmail: ${voter.email}\nStatus: ${voter.status}`);
-                          }}
-                        >
-                          <FaEye />
-                        </button>
-                        
-                        {voter.status === 'pending' && (
-                          <>
+        
+        <div className="stats-bar">
+          <div className="stat-item">
+            <span className="stat-number">{voterStats.verified}</span>
+            <span className="stat-label">Verified</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">{voterStats.pending}</span>
+            <span className="stat-label">Pending</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">{voterStats.suspended}</span>
+            <span className="stat-label">Suspended</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">{voterStats.total}</span>
+            <span className="stat-label">Total Voters</span>
+          </div>
+        </div>
+        
+        <div className="filters-bar">
+          <div className="search-box">
+            <FaSearch />
+            <input 
+              type="text" 
+              placeholder="Search voters by name, email, or username..." 
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
+          <div className="filter-options">
+            <select 
+              className="dropdown-filter"
+              value={voterFilter}
+              onChange={(e) => {
+                setVoterFilter(e.target.value);
+                setTimeout(() => loadVotersData(), 300);
+              }}
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="suspended">Suspended</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="card">
+          <div className="card-content">
+            {voters.length > 0 ? (
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Voter ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                    <th>Verified</th>
+                    <th>Registration Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {voters.map(voter => (
+                    <tr key={voter.user_id}>
+                      <td>#{voter.user_id.toString().padStart(4, '0')}</td>
+                      <td>{voter.full_name}</td>
+                      <td>{voter.email}</td>
+                      <td>{voter.username}</td>
+                      <td>
+                        <span className={`status-badge status-${voter.status}`}>
+                          {voter.status}
+                        </span>
+                      </td>
+                      <td>
+                        {voter.is_verified ? (
+                          <FaCheckCircle className="text-success" title="Verified" />
+                        ) : (
+                          <FaTimesCircle className="text-danger" title="Not Verified" />
+                        )}
+                      </td>
+                      <td>{new Date(voter.registration_date).toLocaleDateString()}</td>
+                      <td>
+                        <div className="table-actions">
+                          <button 
+                            className="icon-button" 
+                            title="View Details"
+                            onClick={() => {
+                              alert(`Voter Details:\nName: ${voter.full_name}\nEmail: ${voter.email}\nStatus: ${voter.status}`);
+                            }}
+                          >
+                            <FaEye />
+                          </button>
+                          
+                          {voter.status === 'pending' && (
+                            <>
+                              <button 
+                                className="icon-button approve" 
+                                title="Approve"
+                                onClick={() => handleUpdateVoterStatus(voter.user_id, 'active')}
+                              >
+                                <FaUserCheck />
+                              </button>
+                              <button 
+                                className="icon-button delete" 
+                                title="Reject"
+                                onClick={() => handleUpdateVoterStatus(voter.user_id, 'suspended')}
+                              >
+                                <FaUserTimes />
+                              </button>
+                            </>
+                          )}
+                          
+                          {voter.status === 'active' && (
+                            <button 
+                              className="icon-button suspend" 
+                              title="Suspend"
+                              onClick={() => handleUpdateVoterStatus(voter.user_id, 'suspended')}
+                            >
+                              <FaUserSlash />
+                            </button>
+                          )}
+                          
+                          {voter.status === 'suspended' && (
                             <button 
                               className="icon-button approve" 
-                              title="Approve"
+                              title="Reinstate"
                               onClick={() => handleUpdateVoterStatus(voter.user_id, 'active')}
                             >
                               <FaUserCheck />
                             </button>
-                            <button 
-                              className="icon-button delete" 
-                              title="Reject"
-                              onClick={() => handleUpdateVoterStatus(voter.user_id, 'suspended')}
-                            >
-                              <FaUserTimes />
-                            </button>
-                          </>
-                        )}
-                        
-                        {voter.status === 'active' && (
-                          <button 
-                            className="icon-button suspend" 
-                            title="Suspend"
-                            onClick={() => handleUpdateVoterStatus(voter.user_id, 'suspended')}
-                          >
-                            <FaUserSlash />
-                          </button>
-                        )}
-                        
-                        {voter.status === 'suspended' && (
-                          <button 
-                            className="icon-button approve" 
-                            title="Reinstate"
-                            onClick={() => handleUpdateVoterStatus(voter.user_id, 'active')}
-                          >
-                            <FaUserCheck />
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div className="empty-state">
-              <FaUsers className="empty-icon" />
-              <h3>No voters found</h3>
-              <p>Try adjusting your search or filter criteria</p>
-              {/* ALSO ADD BUTTON IN EMPTY STATE */}
-              <button 
-                className="primary-button"
-                onClick={() => setShowAddUserModal(true)}
-                style={{marginTop: '15px'}}
-              >
-                <FaUserPlus /> Add Your First User
-              </button>
-            </div>
-          )}
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="empty-state">
+                <FaUsers className="empty-icon" />
+                <h3>No voters found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+                <button 
+                  className="primary-button"
+                  onClick={() => setShowAddUserModal(true)}
+                  style={{marginTop: '15px'}}
+                >
+                  <FaUserPlus /> Add Your First User
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Add User Modal */}
+        <AddUserModal 
+          isOpen={showAddUserModal}
+          onClose={() => setShowAddUserModal(false)}
+          onUserAdded={handleUserAdded}
+        />
       </div>
-    </div>
-  );
-};
+    );
+  };
   
   // Render the candidates management content
   const renderCandidates = () => {
@@ -2359,7 +2358,6 @@ useEffect(() => {
 
   // Check if user is authenticated, redirect if not
   if (!authToken || !adminInfo) {
-    // You could show a loading spinner here or redirect immediately
     return (
       <div className="loading-container">
         <FaSpinner className="spinner" />
@@ -2514,7 +2512,6 @@ useEffect(() => {
                 <button 
                   className="dropdown-item"
                   onClick={() => {
-                    // System health check
                     apiService.getSystemHealth(authToken).then(result => {
                       alert(`System Status: ${result.status}\nDatabase: ${result.database}\nUptime: ${Math.floor(result.uptime / 60)} minutes`);
                     });
