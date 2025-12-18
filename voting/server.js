@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'Yahooamaps1$$19110',
+    password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'voting_system',
     port: process.env.DB_PORT || 3306,
     waitForConnections: true,
@@ -2793,4 +2793,5 @@ process.on('SIGINT', () => {
         console.log('Database connections closed');
         process.exit(0);
     });
+
 });
